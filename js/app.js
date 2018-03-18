@@ -1,4 +1,7 @@
 let seconds = 0;
+let speedX = 0;
+let speedY = 0;
+let friction = 0.3;
 
 let countSeconds = setInterval(() => {
     seconds += 1;
@@ -53,27 +56,42 @@ class Player {
         this.y = 400;
     }
 
-    update() {
+    update(dt) {
     //TODO: add collisions with enemies!
         if (player.y < 20) {
             this.x = 202;
             this.y = 400;
         }
+
+        this.x = this.x + (speedX*dt);
+        this.y = this.y + (speedY*dt);
     }
 
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
-    handleInput(keyboard) {
-        if (keyboard == 'up' && this.y > 9) {
-            this.y -= 5;
-        } else if (keyboard == 'down' && this.y < 400) {
-            this.y += 5;
-        } else if (keyboard == 'right' && this.x < 415) {
-            this.x += 5;
-        } else if (keyboard == 'left' && this.x > -9) {
-            this.x -= 5;
+    handleKeydown(keyboard) {
+        if (keyboard == 'up'/* && this.y > 9*/) {
+            speedY = -150;
+        } else if (keyboard == 'down'/* && this.y < 400*/) {
+            speedY = 150;
+        } else if (keyboard == 'right'/* && this.x < 415*/) {
+            speedX = 150;
+        } else if (keyboard == 'left'/* && this.x > -9*/) {
+            speedX = -150;
+        }
+    }
+
+    handleKeyup(keyoff) {
+        if (keyoff == 'up' && speedY === -150) {
+            speedY = 0;
+        } else if (keyoff == 'down' && speedY === 150) {
+            speedY = 0;
+        } else if (keyoff == 'right' && speedX === 150) {
+            speedX = 0;
+        } else if (keyoff == 'left' && speedX === -150) {
+            speedX = 0;
         }
     }
 }
@@ -99,5 +117,16 @@ document.addEventListener('keydown', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    player.handleKeydown(allowedKeys[e.keyCode]);
+});
+
+document.addEventListener('keyup', function(e) {
+    let allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+    };
+
+    player.handleKeyup(allowedKeys[e.keyCode]);
 });
