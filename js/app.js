@@ -1,7 +1,11 @@
 let seconds = 0;
 let speedX = 0;
 let speedY = 0;
-let friction = 0.3;
+let score = 0;
+let lives = 3;
+
+const count = document.getElementById('count');
+const lifecount = document.getElementById('lifecount');
 
 let countSeconds = setInterval(() => {
     seconds += 1;
@@ -21,7 +25,7 @@ class Enemy {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-        this.sprite = 'images/enemy-bug.png';
+        this.sprite = 'images/enemy-bug-small.png';
         this.x = x;
         this.y = y;
     }
@@ -37,6 +41,15 @@ class Enemy {
         } else {
             this.x = -100;
         }
+
+        if ((player.x >= this.x && player.y >= this.y && player.x - this.x < 90 && player.y - this.y < 66) ||
+        (player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66) ||
+        (player.x >= this.x && player.y < this.y && player.x - this.x < 90 && this.y - player.y < 72) ||
+        (player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 72)) {
+            lives -= 1;
+            lifecount.innerHTML = lives;
+            player.startPosition();
+        }
     }
 
 // Draw the enemy on the screen, required method for game
@@ -51,20 +64,42 @@ class Enemy {
 
 class Player {
     constructor() {
-        this.sprite = 'images/char-boy.png';
-        this.x = 202;
-        this.y = 400;
+        this.sprite = 'images/char-boy-small.png';
+        this.startPosition();
+    }
+
+    startPosition() {
+        this.x = 220;
+        this.y = 450;
     }
 
     update(dt) {
-    //TODO: add collisions with enemies!
-        if (player.y < 20) {
-            this.x = 202;
-            this.y = 400;
+        if (this.y < 100) {
+            this.startPosition();
+            score += 1;
+            count.innerHTML = score;
+            if (score % 30 === 0) {
+                lives += 1;
+                lifecount.innerHTML = lives;
+            }
         }
 
+        if (this.y < 9 && speedY < 0) {
+            this.x = this.x + (speedX*dt);
+            this.y = 8;
+        } else if (this.y > 455 && speedY > 0) {
+            this.x = this.x + (speedX*dt);
+            this.y = 456;
+        } else if (this.x < 1 && speedX < 0) {
+            this.x = 0;
+            this.y = this.y + (speedY*dt);
+        } else if (this.x > 437 && speedX > 0) {
+            this.x = 438;
+            this.y = this.y + (speedY*dt);
+        } else {
         this.x = this.x + (speedX*dt);
         this.y = this.y + (speedY*dt);
+        }
     }
 
     render() {
@@ -72,13 +107,13 @@ class Player {
     }
 
     handleKeydown(keyboard) {
-        if (keyboard == 'up'/* && this.y > 9*/) {
+        if (keyboard == 'up') {
             speedY = -150;
-        } else if (keyboard == 'down'/* && this.y < 400*/) {
+        } else if (keyboard == 'down') {
             speedY = 150;
-        } else if (keyboard == 'right'/* && this.x < 415*/) {
+        } else if (keyboard == 'right') {
             speedX = 150;
-        } else if (keyboard == 'left'/* && this.x > -9*/) {
+        } else if (keyboard == 'left') {
             speedX = -150;
         }
     }
@@ -100,8 +135,8 @@ class Player {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-let bug1 = new Enemy(-101, 140);
-let bug2 = new Enemy(-220, 140);
+let bug1 = new Enemy(-101, 250);
+let bug2 = new Enemy(-220, 250);
 
 let allEnemies = [bug1, bug2];
 
