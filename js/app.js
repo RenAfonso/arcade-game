@@ -17,6 +17,11 @@ let countSeconds = setInterval(() => {
     }
 }, 1000);
 
+function increaseCount() {
+    score += 1;
+    count.innerHTML = score;
+}
+
 // Enemies our player must avoid
 class Enemy {
     constructor(x, y) {
@@ -36,16 +41,18 @@ class Enemy {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+        let bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 53 && player.y - this.y < 61;
+        let bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 61;
+        let topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 53 && this.y - player.y < 72;
+        let topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 72;
+
         if (this.x < 505) {
             this.x += (100*dt);
         } else {
             this.x = -100;
         }
 
-        if ((player.x >= this.x && player.y >= this.y && player.x - this.x < 90 && player.y - this.y < 66) ||
-        (player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66) ||
-        (player.x >= this.x && player.y < this.y && player.x - this.x < 90 && this.y - player.y < 72) ||
-        (player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 72)) {
+        if (bottomRight || bottomLeft || topRight || topLeft) {
             lives -= 1;
             lifecount.innerHTML = lives;
             player.startPosition();
@@ -76,8 +83,7 @@ class Player {
     update(dt) {
         if (this.y < 100) {
             this.startPosition();
-            score += 1;
-            count.innerHTML = score;
+            increaseCount();
             if (score % 30 === 0) {
                 lives += 1;
                 lifecount.innerHTML = lives;
@@ -131,6 +137,84 @@ class Player {
     }
 }
 
+class Gem {
+    constructor() {
+        this.type = 'bonus';
+    }
+
+    startPosition() {
+        this.x = 505;
+        this.y = 606;
+    }
+
+    hidePosition() {
+        delete this.x;
+        delete this.y;
+    }
+
+    update() {
+        let bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 90 && player.y - this.y < 66;
+        let bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66;
+        let topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 90 && this.y - player.y < 72;
+        let topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 72;
+
+        if (bottomRight || bottomLeft || topRight || topLeft) {
+            increaseCount();
+        }
+
+        if (score > 0) {
+            if (score % 2 <= 0) {
+                this.startPosition();
+            } else if (score % 2 != 0) {
+                this.hidePosition();
+            }
+        }
+    }
+
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+}
+
+class Blue extends Gem {
+    constructor() {
+        super();
+        this.sprite = 'images/gem-blue-small.png';
+    }
+
+    startPosition() {
+        super.startPosition();
+        this.x = 430;
+        this.y = 140;
+    }
+}
+
+class Green extends Gem {
+    constructor() {
+        super();
+        this.sprite = 'images/gem-green-small.png';
+    }
+
+    startPosition() {
+        super.startPosition();
+        this.x = 78;
+        this.y = 228;
+    }
+}
+
+class Orange extends Gem {
+    constructor() {
+        super();
+        this.sprite = 'images/gem-blue-small.png';
+    }
+
+    startPosition() {
+        super.startPosition();
+        this.x = 166;
+        this.y = 315;
+    }
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -141,6 +225,9 @@ let bug2 = new Enemy(-220, 250);
 let allEnemies = [bug1, bug2];
 
 let player = new Player();
+
+
+let gem = new Blue();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

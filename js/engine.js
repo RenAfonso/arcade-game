@@ -94,15 +94,9 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update(dt);
+        gem.update();
     }
 
-    /*function checkCollisions() {
-        if (Math.abs(enemy.x - player.x) < 50 && Math.abs(enemy.y - player.y) < 50) {
-            lives -= 1;
-            player.x = 202;
-            player.y = 400;
-        }
-    }*/
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -162,6 +156,7 @@ var Engine = (function(global) {
         });
 
         player.render();
+        gem.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -181,7 +176,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug-small.png',
-        'images/char-boy-small.png'
+        'images/char-boy-small.png',
+        'images/gem-blue-small.png'
     ]);
     Resources.onReady(init);
 
