@@ -41,7 +41,7 @@ function increaseLives() {
 }
 
 // function to check if all cards were matched and game is won
-/*function checkWin() {
+/*gitfunction checkWin() {
     if (matched.length === 16) {
         end();
     }
