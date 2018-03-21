@@ -1,4 +1,5 @@
-let seconds = 0;
+let seconds;
+let countSeconds;
 let speedX = 0;
 let speedY = 0;
 let score = 0;
@@ -9,8 +10,18 @@ let currentGem = [];
 
 const count = document.getElementById('count');
 const lifecount = document.getElementById('lifecount');
+const modal = document.getElementById('myModal');
+const message = document.getElementById('display-message');
+const close = document.getElementById('close');
+const again = document.getElementById('again');
 
-let countSeconds = setInterval(() => {
+function start() {
+    seconds = 0;
+
+    countSeconds = setInterval(countTime, 1000);
+}
+
+function countTime() {
     seconds += 1;
 
     if (seconds >= 10) {
@@ -18,7 +29,12 @@ let countSeconds = setInterval(() => {
     } else {
         timer.innerHTML = '0' + seconds;
     }
-}, 1000);
+}
+
+function end() {
+    clearInterval(countSeconds);
+    openModal();
+}
 
 function increaseCount() {
     score += 1;
@@ -40,56 +56,11 @@ function increaseLives() {
     lifecount.innerHTML = lives;
 }
 
-// function to check if all cards were matched and game is won
-/*gitfunction checkWin() {
-    if (matched.length === 16) {
-        end();
-    }
-}
-
-// timer function to start counting ellapsed time using setInterval
-function start() {
-    seconds = 0;
-
-    countSeconds = setInterval(countTime, 1000);
-}
-
-// increments time and writes to html
-function countTime() {
-    seconds += 1;
-
-    if (seconds >= 10) {
-        timer.innerHTML = seconds;
-    } else {
-        timer.innerHTML = '0' + seconds;
-    }
-}
-
-// timer function to stop counting ellapsed time, display game duration and congratulation message (sweetalert2)
-function end() {
-    clearInterval(countSeconds);
-
-    const star = '<i class="fa fa-star"></i>';
-
-    if (moves >= 24) {
-        finalStars = '0 stars';
-    } else if (moves >= 20) {
-        finalStars = star;
-    } else if (moves >= 14) {
-        finalStars = star + star;
-    } else {
-        finalStars = star + star + star;
-    }
-
-    openModal();
-}
-
-// function that opens the modal and displays a play again and close buttons
 function openModal() {
-    const displayStars = document.getElementById('display-stars');
+    const displayScore = document.getElementById('display-score');
     const displaySeconds = document.getElementById('display-seconds');
 
-    displayStars.innerHTML = finalStars;
+    displayScore.innerHTML = score;
     displaySeconds.innerHTML = seconds;
     modal.style.display = "block";
 
@@ -104,8 +75,38 @@ function closeModal() {
 
 function playAgain() {
     modal.style.display = 'none';
-    rebuild();
-}*/
+    restart();
+}
+
+function checkEndGame() {
+    if (lives < 0) {
+        message.innerHTML = 'Death by ladybug!';
+        end();
+    } else if (seconds === 60) {
+        message.innerHTML = 'Congratulations!';
+        end();
+    }
+}
+
+function restart() {
+    clearInterval(countSeconds);
+    timer.innerHTML = '00'
+    resetVariables();
+    lifecount.innerHTML = lives;
+    count.innerHTML = score;
+    start();
+}
+
+function resetVariables() {
+    seconds = 0;
+    speedX = 0;
+    speedY = 0;
+    score = 0;
+    lives = 1;
+    extraLifeCounter = 0;
+    gemsCaught = [];
+    currentGem = [];
+}
 
 // Enemies our player must avoid
 class Enemy {
@@ -140,8 +141,9 @@ class Enemy {
 
         if (bottomRight || bottomLeft || topRight || topLeft) {
             lives -= 1;
-            lifecount.innerHTML = lives;
             player.startPosition();
+            lifecount.innerHTML = lives;
+            checkEndGame();
         }
     }
 
@@ -415,3 +417,5 @@ document.addEventListener('keyup', function(e) {
     player.handleKeyup(allowedKeys[e.keyCode]);
 });
 
+start();
+checkEndGame();
