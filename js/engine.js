@@ -90,11 +90,16 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
+        gemBlue.update();
+        gemGreen.update();
+        gemOrange.update();
+        life.update();
+        
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+
         player.update(dt);
-        gem.update();
     }
 
 
@@ -113,7 +118,7 @@ var Engine = (function(global) {
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
                 'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/stone-block.png',   // Row 1 of 2 of grass
+                'images/grass-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
             numRows = 6,
@@ -151,12 +156,16 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        gemBlue.render();
+        gemGreen.render();
+        gemOrange.render();
+        life.render();
+        
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
         player.render();
-        gem.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -177,7 +186,10 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug-small.png',
         'images/char-boy-small.png',
-        'images/gem-blue-small.png'
+        'images/gem-blue-small.png',
+        'images/gem-green-small.png',
+        'images/gem-orange-small.png',
+        'images/heart-small.png'
     ]);
     Resources.onReady(init);
 
