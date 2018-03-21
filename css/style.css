@@ -38,13 +38,13 @@ body {
 .buttons {
     display: flex;
     justify-content: space-between;
-    width: 65%;
+    width: 80%;
 }
 
 .submit {
     cursor: pointer;
     background-color: #566dd6;
-    width: 125px;
+    width: 200px;
     height: 40px;
     border: none;
     border-radius: 8px;
@@ -60,6 +60,19 @@ body {
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
 }
 
-.submit:hover {
-    background-color: #3e4391;
+#again .submit {
+    background-color: #5fc148;
+}
+
+#close .submit {
+    background-color: #c53d0b;
+}
+
+#again .submit:hover,
+#close .submit:hover {
+    background-color: #566dd6;
+}
+
+.thanks-message {
+    display: none;
 }

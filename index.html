@@ -20,9 +20,9 @@
             </div>
     </section>
 
-    <div id="myModal" class="modal">
+    <div id="endModal" class="modal">
         <div class="modal-content">
-            <div class="modal-logo">
+            <div class="modal-logo" id="logo">
                 <img src="images/trophy.svg">
             </div>
             <div class="modal-message">
@@ -33,12 +33,17 @@
                 <p>Want to try again?</p>
             </div>
             <div class="buttons">
-                <div id="again" class="restart">
-                    <input type="submit" class="submit" value="Of course">
+                <div class="restart" id="again">
+                    <input type="submit" class="submit" value="Fear no bug!">
                 </div>
-                <div id="close" class="restart">
-                    <input type="submit" class="submit" value="Not really">
+                <div class="no-restart" id="close">
+                    <input type="submit" class="submit" value="Bugs are scary">
                 </div>
+            </div>
+            <div class="thanks-message" id="thank-you">
+                <p>Thank you for playing.</p>
+                <p>This game is a project for Udacity's Front-End Nanodegree.</p>
+                <p>Developed by Renato Afonso with game engine and sprites by Udacity.</p>
             </div>
         </div>
     </div>

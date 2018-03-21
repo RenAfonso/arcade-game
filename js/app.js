@@ -10,10 +10,12 @@ let currentGem = [];
 
 const count = document.getElementById('count');
 const lifecount = document.getElementById('lifecount');
-const modal = document.getElementById('myModal');
+const modal = document.getElementById('endModal');
 const message = document.getElementById('display-message');
 const close = document.getElementById('close');
 const again = document.getElementById('again');
+const logo = document.getElementById('logo');
+const thanks = document.getElementById('thank-you');
 
 function start() {
     seconds = 0;
@@ -70,19 +72,22 @@ function openModal() {
 
 // When the user clicks on <span> (x), close the modal
 function closeModal() {
-    modal.style.display = 'none';
+    thanks.style.display = 'block';
 }
 
 function playAgain() {
     modal.style.display = 'none';
+    thanks.style.display = 'none';
     restart();
 }
 
 function checkEndGame() {
     if (lives < 0) {
+        logo.innerHTML = '<img src="images/ladybug.svg">';
         message.innerHTML = 'Death by ladybug!';
         end();
-    } else if (seconds === 60) {
+    } else if (score === 5) {
+        logo.innerHTML = '<img src="images/trophy.svg">';
         message.innerHTML = 'Congratulations!';
         end();
     }
@@ -172,6 +177,7 @@ class Player {
         if (this.y < 80) {
             this.startPosition();
             increaseCount();
+            checkEndGame();
         }
 
         if (this.y < 9 && speedY < 0) {
@@ -418,4 +424,3 @@ document.addEventListener('keyup', function(e) {
 });
 
 start();
-checkEndGame();
