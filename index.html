@@ -2,12 +2,30 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Effective JavaScript: Frogger</title>
+    <title>The Ladybug Game: a remake of the old Frogger arcade game</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Coda">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+    <div id="start-menu" class="menu">
+        <div class="menu-content">
+            <div class="menu-message">
+                <h3>THE LADYBUG GAME</h3>
+                <p>Your goal is to score 10 points.</p>
+                <p>You get 1 point every time you reach the water or catch a gem.</p>
+                <p>You start with 2 lives, so be careful and avoid the ladybugs. Have fun!</p>
+                <p><strong>Please select a character to start the game.</strong></p>
+            </div>
+            <div class="menu-characters">
+                <div class="character" id="boy">
+                    <img src="images/char-boy.png">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <section class="score-panel">
             <div class="count-panel">
                 <p>Score: <span id="count">0</span></p>
@@ -20,7 +38,7 @@
             </div>
     </section>
 
-    <div id="endModal" class="modal">
+    <div id="end-modal" class="modal">
         <div class="modal-content">
             <div class="modal-logo" id="logo">
                 <img src="images/trophy.svg">

@@ -8,9 +8,11 @@ let extraLifeCounter = 0;
 let gemsCaught = [];
 let currentGem = [];
 
+const boy = document.getElementById('boy');
+const menu = document.getElementById('start-menu');
 const count = document.getElementById('count');
 const lifecount = document.getElementById('lifecount');
-const modal = document.getElementById('endModal');
+const modal = document.getElementById('end-modal');
 const message = document.getElementById('display-message');
 const close = document.getElementById('close');
 const again = document.getElementById('again');
@@ -18,6 +20,30 @@ const logo = document.getElementById('logo');
 const thanks = document.getElementById('thank-you');
 
 function start() {
+    menu.style.display = 'none';
+
+    document.addEventListener('keydown', function(e) {
+        let allowedKeys = {
+            37: 'left',
+            38: 'up',
+            39: 'right',
+            40: 'down'
+        };
+    
+        player.handleKeydown(allowedKeys[e.keyCode]);
+    });
+    
+    document.addEventListener('keyup', function(e) {
+        let allowedKeys = {
+            37: 'left',
+            38: 'up',
+            39: 'right',
+            40: 'down'
+        };
+    
+        player.handleKeyup(allowedKeys[e.keyCode]);
+    });
+
     seconds = 0;
 
     countSeconds = setInterval(countTime, 1000);
@@ -64,7 +90,7 @@ function openModal() {
 
     displayScore.innerHTML = score;
     displaySeconds.innerHTML = seconds;
-    modal.style.display = "block";
+    modal.style.display = 'block';
 
     close.addEventListener('click', closeModal);
     again.addEventListener('click', playAgain);
@@ -86,7 +112,7 @@ function checkEndGame() {
         logo.innerHTML = '<img src="images/ladybug.svg">';
         message.innerHTML = 'Death by ladybug!';
         end();
-    } else if (score === 5) {
+    } else if (score >= 10) {
         logo.innerHTML = '<img src="images/trophy.svg">';
         message.innerHTML = 'Congratulations!';
         end();
@@ -150,6 +176,8 @@ class Enemy {
             lifecount.innerHTML = lives;
             checkEndGame();
         }
+
+        checkEndGame();
     }
 
 // Draw the enemy on the screen, required method for game
@@ -177,7 +205,6 @@ class Player {
         if (this.y < 80) {
             this.startPosition();
             increaseCount();
-            checkEndGame();
         }
 
         if (this.y < 9 && speedY < 0) {
@@ -196,6 +223,7 @@ class Player {
         this.x = this.x + (speedX*dt);
         this.y = this.y + (speedY*dt);
         }
+        
     }
 
     render() {
@@ -401,26 +429,5 @@ let life = new Life();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keydown', function(e) {
-    let allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
 
-    player.handleKeydown(allowedKeys[e.keyCode]);
-});
-
-document.addEventListener('keyup', function(e) {
-    let allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
-
-    player.handleKeyup(allowedKeys[e.keyCode]);
-});
-
-start();
+boy.addEventListener('click', start);
