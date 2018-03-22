@@ -1,3 +1,4 @@
+// Variables used during the game
 let seconds;
 let countSeconds;
 let speedX = 0;
@@ -9,6 +10,7 @@ let gemsCaught = [];
 let currentGem = [];
 let pocketGem = 0;
 
+// Constants from HTML
 const boy = document.getElementById('boy');
 const menu = document.getElementById('start-menu');
 const count = document.getElementById('count');
@@ -21,6 +23,7 @@ const again = document.getElementById('again');
 const logo = document.getElementById('logo');
 const thanks = document.getElementById('thank-you');
 
+// Function to start the game upon character selection. Hides menu and adds keyboard event listeners. Starts counting seconds.
 function start() {
     select.play();
     menu.style.display = 'none';
@@ -52,6 +55,7 @@ function start() {
     countSeconds = setInterval(countTime, 1000);
 }
 
+// Function that displays time on screen
 function countTime() {
     seconds += 1;
 
@@ -62,21 +66,25 @@ function countTime() {
     }
 }
 
+// Function that ends the game and clears counted seconds
 function end() {
     clearInterval(countSeconds);
     openModal();
 }
 
+// Function that increases score
 function increaseCount() {
     score += 1;
     count.innerHTML = score;
 }
 
+// Function that resets the arrays that store arrays. One that dictates which gem appears and the other that allows you to "keep them" in your pocket
 function clearArrays() {
     currentGem.length = 0;
     gemsCaught.length = 0;
 }
 
+// Function that increases lives upon catching a heart. It only happens once per game due to extraLifeCounter
 function increaseLives() {
     if (lives === 0) {
         lives = 1;
@@ -87,6 +95,7 @@ function increaseLives() {
     lifecount.innerHTML = lives;
 }
 
+// Function for game over modal (either win or loss)
 function openModal() {
     const displayScore = document.getElementById('display-score');
     const displaySeconds = document.getElementById('display-seconds');
@@ -99,17 +108,19 @@ function openModal() {
     again.addEventListener('click', playAgain);
 }
 
-// When the user clicks on <span> (x), close the modal
+// Function to close the modal
 function closeModal() {
     thanks.style.display = 'block';
 }
 
+// Function that restarts the game if player chooses so on the modal before
 function playAgain() {
     modal.style.display = 'none';
     thanks.style.display = 'none';
     restart();
 }
 
+// Function that tests for victory or defeat condition, adjusting end game modal accordingly
 function checkEndGame() {
     if (lives < 0) {
         logo.innerHTML = '<img src="images/ladybug.svg">';
@@ -122,6 +133,7 @@ function checkEndGame() {
     }
 }
 
+// Function that restarts the game, setting it to the original status
 function restart() {
     clearInterval(countSeconds);
     timer.innerHTML = '00'
@@ -131,6 +143,7 @@ function restart() {
     start();
 }
 
+// Function that resets all variables, essential for restart function
 function resetVariables() {
     seconds = 0;
     speedX = 0;
@@ -142,14 +155,9 @@ function resetVariables() {
     currentGem = [];
 }
 
-// Enemies our player must avoid
+// Enemy object (bugs!) that requires position and speed inputs, upon object creation
 class Enemy {
     constructor(x, y, speed) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
         this.sprite = 'images/enemy-bug-small.png';
         this.x = x;
         this.y = y;
@@ -159,20 +167,21 @@ class Enemy {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
     update(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+        
+        // Player-enemy(this) contact specification
         let bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 84 && player.y - this.y < 61;
         let bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 58 && player.y - this.y < 61;
         let topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 84 && this.y - player.y < 72;
         let topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 58 && this.y - player.y < 72;
 
+        // Forces enemy movement to the right, depending on specified speed
         if (this.x < 505) {
             this.x += (this.speed*dt);
         } else {
             this.x = -100;
         }
 
+        // If a bug touches the player, he loses a life, loses gems in pocket and checks for end game position
         if (bottomRight || bottomLeft || topRight || topLeft) {
             lives -= 1;
             loseLife.play();
@@ -183,31 +192,31 @@ class Enemy {
             checkEndGame();
         }
 
+        // At all times, checks for endgame condition due to score increase. Can be placed in player.update(dt) but it makes an easier read here
         checkEndGame();
     }
 
-// Draw the enemy on the screen, required method for game
+    // Draw the enemy on the screen, required method for game
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
+// Player object
 class Player {
     constructor() {
         this.sprite = 'images/char-boy-small.png';
         this.startPosition();
     }
 
+    // Where he starts
     startPosition() {
         this.x = 220;
         this.y = 450;
     }
 
     update(dt) {
+        // Checks if player reaches the water and, if so, adjusts score and gems in pocket
         if (this.y < 80) {
             goal.play();
             this.startPosition();
@@ -217,6 +226,7 @@ class Player {
             increaseCount();
         }
 
+        // Keeps player from moving out of the canvas
         if (this.y < 9 && speedY < 0) {
             this.x = this.x + (speedX*dt);
             this.y = 8;
@@ -230,8 +240,8 @@ class Player {
             this.x = 438;
             this.y = this.y + (speedY*dt);
         } else {
-        this.x = this.x + (speedX*dt);
-        this.y = this.y + (speedY*dt);
+            this.x = this.x + (speedX*dt);
+            this.y = this.y + (speedY*dt);
         }
         
     }
@@ -240,6 +250,7 @@ class Player {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
+    // Handles keyboard interaction and adds horizontal and vertical speed
     handleKeydown(keyboard) {
         if (keyboard == 'up') {
             speedY = -150;
@@ -252,6 +263,7 @@ class Player {
         }
     }
 
+    // Sets player speed to 0 on keyup
     handleKeyup(keyoff) {
         if (keyoff == 'up' && speedY === -150) {
             speedY = 0;
@@ -265,27 +277,33 @@ class Player {
     }
 }
 
+// Bonus object that allows extra score
 class Gem {
     constructor() {
         this.type = 'bonus';
     }
 
+    // They're off screen unless called for
     startPosition() {
         this.x = 505;
         this.y = 606;
     }
 
+    // Hides the gem when this method is called
     hidePosition() {
         delete this.x;
         delete this.y;
     }
 
     update() {
+
+        // Player-gem(this) contact specification
         let bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 90 && player.y - this.y < 66;
         let bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66;
         let topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 90 && this.y - player.y < 72;
         let topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 72;
 
+        // If a player catches a gem, it stores said gem in the pocket
         if (bottomRight || bottomLeft || topRight || topLeft) {
             let instantGem = currentGem.pop();
             gemsCaught.push(instantGem);
@@ -294,6 +312,7 @@ class Gem {
             gem.innerHTML = pocketGem;
         }
 
+        // The orange gem is worth more...
         if (gemsCaught.length === 3) {
             pocketGem += 2;
             gem.innerHTML = pocketGem;
@@ -306,12 +325,14 @@ class Gem {
     }
 }
 
+// A subclass for a blue gem...
 class Blue extends Gem {
     constructor() {
         super();
         this.sprite = 'images/gem-blue-small.png';
     }
 
+    //that always appears here!
     startPosition() {
         super.startPosition();
         this.x = 430;
@@ -319,6 +340,7 @@ class Blue extends Gem {
     }
 
     update() {
+        // Because the gem appearance order is fixed, it checks if it's the blue gem turn
         super.update();
         if (score > 0 && gemsCaught.length == 0) {
             if (currentGem[0] !== 'blue'){
@@ -331,6 +353,7 @@ class Blue extends Gem {
     }
 }
 
+// Just like the blue gem
 class Green extends Gem {
     constructor() {
         super();
@@ -357,6 +380,7 @@ class Green extends Gem {
     }
 }
 
+// Just like the blue gem
 class Orange extends Gem {
     constructor() {
         super();
@@ -383,6 +407,7 @@ class Orange extends Gem {
     }
 }
 
+// A heart object that grants an extra life
 class Life {
     constructor() {
         this.type = 'bonus';
@@ -400,17 +425,21 @@ class Life {
     }
 
     update() {
+
+        // Player-heart(this) contact specification
         let bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 88 && player.y - this.y < 66;
         let bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66;
         let topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 88 && this.y - player.y < 88;
         let topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 88;
 
+        // Condition to display the heart. It only happens once per game.
         if (seconds > 30 && extraLifeCounter === 0) {
             this.startPosition();
         } else {
             this.hidePosition();
         }
 
+        // Checks for collision and increases life counter
         if (bottomRight || bottomLeft || topRight || topLeft) {
             extraLife.play();
             increaseLives();
@@ -422,10 +451,7 @@ class Life {
     }
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
+// Creates all enemy objects and stores them in an array for game engine
 let bug1 = new Enemy(-101, 305, 150);
 let bug2 = new Enemy(-220, 305, 150);
 let bug3 = new Enemy(-101, 220, 100);
@@ -433,21 +459,19 @@ let bug4 = new Enemy(-220, 220, 100);
 let bug5 = new Enemy(-341, 135, 200);
 let bug6 = new Enemy(-101, 135, 200);
 let allEnemies = [bug1, bug2, bug3, bug4, bug5, bug6];
-
+// Creates the player object
 let player = new Player();
-
+// Creates the bonus objects
 let gemBlue = new Blue();
 let gemGreen = new Green();
 let gemOrange = new Orange();
 let life = new Life();
-
+// Creates the sounds that happen on game events
 let gemSound = new Audio('sounds/diamond2.wav');
 let extraLife = new Audio('sounds/extralife.wav');
 let loseLife = new Audio('sounds/loselife.wav');
 let select = new Audio('sounds/select.wav');
 let goal = new Audio('sounds/water.wav');
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-
+// Adds event listener to first selection menu, starting the game upon character selection
 boy.addEventListener('click', start);
