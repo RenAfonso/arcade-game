@@ -7,10 +7,12 @@ let lives = 1;
 let extraLifeCounter = 0;
 let gemsCaught = [];
 let currentGem = [];
+let pocketGem = 0;
 
 const boy = document.getElementById('boy');
 const menu = document.getElementById('start-menu');
 const count = document.getElementById('count');
+const gem = document.getElementById('gem');
 const lifecount = document.getElementById('lifecount');
 const modal = document.getElementById('end-modal');
 const message = document.getElementById('display-message');
@@ -20,6 +22,7 @@ const logo = document.getElementById('logo');
 const thanks = document.getElementById('thank-you');
 
 function start() {
+    select.play();
     menu.style.display = 'none';
 
     document.addEventListener('keydown', function(e) {
@@ -110,7 +113,7 @@ function playAgain() {
 function checkEndGame() {
     if (lives < 0) {
         logo.innerHTML = '<img src="images/ladybug.svg">';
-        message.innerHTML = 'Death by ladybug!';
+        message.innerHTML = 'Death by bug!';
         end();
     } else if (score >= 10) {
         logo.innerHTML = '<img src="images/trophy.svg">';
@@ -172,8 +175,11 @@ class Enemy {
 
         if (bottomRight || bottomLeft || topRight || topLeft) {
             lives -= 1;
+            loseLife.play();
             player.startPosition();
             lifecount.innerHTML = lives;
+            pocketGem = 0;
+            gem.innerHTML = pocketGem;
             checkEndGame();
         }
 
@@ -203,7 +209,11 @@ class Player {
 
     update(dt) {
         if (this.y < 80) {
+            goal.play();
             this.startPosition();
+            score += pocketGem;
+            pocketGem = 0;
+            gem.innerHTML = pocketGem;
             increaseCount();
         }
 
@@ -279,11 +289,14 @@ class Gem {
         if (bottomRight || bottomLeft || topRight || topLeft) {
             let instantGem = currentGem.pop();
             gemsCaught.push(instantGem);
-            increaseCount();
+            gemSound.play();
+            pocketGem += 1;
+            gem.innerHTML = pocketGem;
         }
 
         if (gemsCaught.length === 3) {
-            increaseCount();
+            pocketGem += 2;
+            gem.innerHTML = pocketGem;
             clearArrays();
         }
     }
@@ -399,6 +412,7 @@ class Life {
         }
 
         if (bottomRight || bottomLeft || topRight || topLeft) {
+            extraLife.play();
             increaseLives();
         }
     }
@@ -426,6 +440,12 @@ let gemBlue = new Blue();
 let gemGreen = new Green();
 let gemOrange = new Orange();
 let life = new Life();
+
+let gemSound = new Audio('sounds/diamond2.wav');
+let extraLife = new Audio('sounds/extralife.wav');
+let loseLife = new Audio('sounds/loselife.wav');
+let select = new Audio('sounds/select.wav');
+let goal = new Audio('sounds/water.wav');
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

@@ -2,20 +2,22 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>The Ladybug Game: a remake of the old Frogger arcade game</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css">
+    <title>The bug Game: a remake of the old Frogger arcade game</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Coda">
     <link rel="stylesheet" href="css/style.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
 </head>
 <body>
 
     <div id="start-menu" class="menu">
         <div class="menu-content">
             <div class="menu-message">
-                <h3>THE LADYBUG GAME</h3>
+                <h3>THE BUG GAME</h3>
                 <p>Your goal is to score 10 points.</p>
-                <p>You get 1 point every time you reach the water or catch a gem.</p>
-                <p>You start with 2 lives, so be careful and avoid the ladybugs. Have fun!</p>
+                <p>Your score increases every time you reach the water.</p>
+                <p>Gems give you extra points if you're not caught by a bug.</p>
+                <p>You start with 2 lives, so be careful and avoid the bugs. Have fun!</p>
                 <p><strong>Please select a character to start the game.</strong></p>
             </div>
             <div class="menu-characters">
@@ -30,15 +32,18 @@
             <div class="count-panel">
                 <p>Score: <span id="count">0</span></p>
             </div>
-            <div class="clock">
-                <label class="time"><span id="timer">00</span> s</label>
+            <div class="gem-panel">
+                <p>Gems in pocket: <span id="gem">0</span></p>
             </div>
             <div class="count-lives">
-                <label class="life"><i class="fas fa-heart"></i> left: <span id="lifecount">1</span></label>
+                <p class="life"><i class="fas fa-heart"></i> left: <span id="lifecount">1</span></p>
+            </div>
+            <div class="clock">
+                <p class="time">Time: <span id="timer">00</span> s</p>
             </div>
     </section>
 
-    <div id="end-modal" class="modal">
+    <div class="modal" id="end-modal">
         <div class="modal-content">
             <div class="modal-logo" id="logo">
                 <img src="images/trophy.svg">
@@ -69,5 +74,6 @@
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
+    
 </body>
 </html>
