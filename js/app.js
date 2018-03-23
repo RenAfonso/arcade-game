@@ -1,3 +1,5 @@
+'use strict';
+
 // Variables used during the game
 let seconds;
 let countSeconds;
@@ -11,22 +13,22 @@ let currentGem = [];
 let pocketGem = 0;
 
 // Constants from HTML
-const boy = document.getElementById('boy');
-const menu = document.getElementById('start-menu');
-const count = document.getElementById('count');
-const gem = document.getElementById('gem');
-const lifecount = document.getElementById('lifecount');
-const modal = document.getElementById('end-modal');
-const message = document.getElementById('display-message');
-const close = document.getElementById('close');
-const again = document.getElementById('again');
-const logo = document.getElementById('logo');
-const thanks = document.getElementById('thank-you');
+const BOY = document.getElementById('boy');
+const MENU = document.getElementById('start-menu');
+const COUNT = document.getElementById('count');
+const GEM = document.getElementById('gem');
+const LIFECOUNT = document.getElementById('lifecount');
+const MODAL = document.getElementById('end-modal');
+const MESSAGE = document.getElementById('display-message');
+const CLOSE = document.getElementById('close');
+const AGAIN = document.getElementById('again');
+const LOGO = document.getElementById('logo');
+const THANKS = document.getElementById('thank-you');
 
 // Function to start the game upon character selection. Hides menu and adds keyboard event listeners. Starts counting seconds.
 function start() {
     select.play();
-    menu.style.display = 'none';
+    MENU.style.display = 'none';
 
     document.addEventListener('keydown', function(e) {
         let allowedKeys = {
@@ -75,7 +77,7 @@ function end() {
 // Function that increases score
 function increaseCount() {
     score += 1;
-    count.innerHTML = score;
+    COUNT.innerHTML = score;
 }
 
 // Function that resets the arrays that store arrays. One that dictates which gem appears and the other that allows you to "keep them" in your pocket
@@ -92,7 +94,7 @@ function increaseLives() {
         lives = 2;
     }
     extraLifeCounter = 1;
-    lifecount.innerHTML = lives;
+    LIFECOUNT.innerHTML = lives;
 }
 
 // Function for game over modal (either win or loss)
@@ -102,33 +104,33 @@ function openModal() {
 
     displayScore.innerHTML = score;
     displaySeconds.innerHTML = seconds;
-    modal.style.display = 'block';
+    MODAL.style.display = 'block';
 
-    close.addEventListener('click', closeModal);
-    again.addEventListener('click', playAgain);
+    CLOSE.addEventListener('click', closeModal);
+    AGAIN.addEventListener('click', playAgain);
 }
 
 // Function to close the modal
 function closeModal() {
-    thanks.style.display = 'block';
+    THANKS.style.display = 'block';
 }
 
 // Function that restarts the game if player chooses so on the modal before
 function playAgain() {
-    modal.style.display = 'none';
-    thanks.style.display = 'none';
+    MODAL.style.display = 'none';
+    THANKS.style.display = 'none';
     restart();
 }
 
 // Function that tests for victory or defeat condition, adjusting end game modal accordingly
 function checkEndGame() {
     if (lives < 0) {
-        logo.innerHTML = '<img src="images/ladybug.svg">';
-        message.innerHTML = 'Death by bug!';
+        LOGO.innerHTML = '<img src="images/ladybug.svg" alt="a ladybug logo">';
+        MESSAGE.innerHTML = 'Death by bug!';
         end();
     } else if (score >= 10) {
-        logo.innerHTML = '<img src="images/trophy.svg">';
-        message.innerHTML = 'Congratulations!';
+        LOGO.innerHTML = '<img src="images/trophy.svg" alt="a trophy logo">';
+        MESSAGE.innerHTML = 'Congratulations!';
         end();
     }
 }
@@ -136,10 +138,10 @@ function checkEndGame() {
 // Function that restarts the game, setting it to the original status
 function restart() {
     clearInterval(countSeconds);
-    timer.innerHTML = '00'
+    timer.innerHTML = '00';
     resetVariables();
-    lifecount.innerHTML = lives;
-    count.innerHTML = score;
+    LIFECOUNT.innerHTML = lives;
+    COUNT.innerHTML = score;
     start();
 }
 
@@ -169,10 +171,10 @@ class Enemy {
     update(dt) {
         
         // Player-enemy(this) contact specification
-        let bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 84 && player.y - this.y < 61;
-        let bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 58 && player.y - this.y < 61;
-        let topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 84 && this.y - player.y < 72;
-        let topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 58 && this.y - player.y < 72;
+        const bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 84 && player.y - this.y < 61;
+        const bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 58 && player.y - this.y < 61;
+        const topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 84 && this.y - player.y < 72;
+        const topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 58 && this.y - player.y < 72;
 
         // Forces enemy movement to the right, depending on specified speed
         if (this.x < 505) {
@@ -186,9 +188,9 @@ class Enemy {
             lives -= 1;
             loseLife.play();
             player.startPosition();
-            lifecount.innerHTML = lives;
+            LIFECOUNT.innerHTML = lives;
             pocketGem = 0;
-            gem.innerHTML = pocketGem;
+            GEM.innerHTML = pocketGem;
             checkEndGame();
         }
 
@@ -222,7 +224,7 @@ class Player {
             this.startPosition();
             score += pocketGem;
             pocketGem = 0;
-            gem.innerHTML = pocketGem;
+            GEM.innerHTML = pocketGem;
             increaseCount();
         }
 
@@ -298,10 +300,10 @@ class Gem {
     update() {
 
         // Player-gem(this) contact specification
-        let bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 90 && player.y - this.y < 66;
-        let bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66;
-        let topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 90 && this.y - player.y < 72;
-        let topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 72;
+        const bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 90 && player.y - this.y < 66;
+        const bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66;
+        const topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 90 && this.y - player.y < 72;
+        const topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 72;
 
         // If a player catches a gem, it stores said gem in the pocket
         if (bottomRight || bottomLeft || topRight || topLeft) {
@@ -342,7 +344,7 @@ class Blue extends Gem {
     update() {
         // Because the gem appearance order is fixed, it checks if it's the blue gem turn
         super.update();
-        if (score > 0 && gemsCaught.length == 0) {
+        if (score > 0 && gemsCaught.length === 0) {
             if (currentGem[0] !== 'blue'){
                 currentGem.push('blue');
                 this.startPosition();
@@ -427,10 +429,10 @@ class Life {
     update() {
 
         // Player-heart(this) contact specification
-        let bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 88 && player.y - this.y < 66;
-        let bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66;
-        let topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 88 && this.y - player.y < 88;
-        let topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 88;
+        const bottomRight = player.x >= this.x && player.y >= this.y && player.x - this.x < 88 && player.y - this.y < 66;
+        const bottomLeft = player.x < this.x && player.y >= this.y && this.x - player.x < 68 && player.y - this.y < 66;
+        const topRight = player.x >= this.x && player.y < this.y && player.x - this.x < 88 && this.y - player.y < 88;
+        const topLeft = player.x < this.x && player.y < this.y && this.x - player.x < 68 && this.y - player.y < 88;
 
         // Condition to display the heart. It only happens once per game.
         if (seconds > 30 && extraLifeCounter === 0) {
@@ -474,4 +476,4 @@ let select = new Audio('sounds/select.wav');
 let goal = new Audio('sounds/water.wav');
 
 // Adds event listener to first selection menu, starting the game upon character selection
-boy.addEventListener('click', start);
+BOY.addEventListener('click', start);
