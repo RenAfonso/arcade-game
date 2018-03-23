@@ -1,5 +1,3 @@
-'use strict';
-
 // Variables used during the game
 let seconds;
 let countSeconds;
